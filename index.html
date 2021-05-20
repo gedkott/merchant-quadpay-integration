@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn-sandbox.quadpay.com/v1/quadpay.js" type="text/javascript"></script>
+    <style>
+        input,
+        label {
+            display: block;
+            margin: 10px;
+        }
+    </style>
+    <script>
+        const callback = function (result) {
+            // Fill in your existing credit card form with the details from
+            // the dynamically generated QuadPay single-use card
+            document.getElementById('creditCardNumber').value = result.card.number;
+            document.getElementById('creditCardCvc').value = result.card.cvc;
+            document.getElementById('creditCardExpiryMm').value
+                = result.card.expirationMonth;
+
+            document.getElementById('creditCardExpiryYy').value
+                = result.card.expirationYear;
+
+            document.getElementById('cardholderName').value = result.cardholder.name;
+
+            // Fill in your existing billing address form with details from
+            // the card holder.  If your billing address contains first/last name
+            // fields, you can leave those as the actual customer values.
+            document.getElementById('name').value = result.cardholder.name;
+            document.getElementById('addressLine1').value = result.cardholder.address1;
+            document.getElementById('addressLine2').value = result.cardholder.address2;
+            document.getElementById('city').value = result.cardholder.city;
+            document.getElementById('state').value = result.cardholder.state;
+            document.getElementById('zipCode').value = result.cardholder.postalCode;
+            document.getElementById('country').value = result.cardholder.country;
+
+            document.getElementById('merchant_fee').value =
+                result.merchantFeeForPaymentPlan;
+
+            // The customer object contains the name and address of the customer
+            // that completed the checkout in case you need to update your billing
+            // information records for the customer in your system.
+
+            // Auto-submit the form for the customer
+            document.getElementById('creditCardForm').submit();
+        };
+
+        window.quadpay.virtualCheckout.onComplete(callback);
+    </script>
+
+    <script>
+        async function openCheckout() {
+            const merchantId = '3d7fe082-c58b-4e98-9ad9-b69d12ebe595';
+            const order = {
+                amount: 123.45,
+                currency: 'USD',
+                merchantReference: Math.floor(Math.random() * 100000),
+                shippingAmount: 10,
+                taxAmount: 13.45,
+                customer: {
+                    address1: '123 Main St',
+                    address2: 'Apt #1',
+                    city: 'New York',
+                    state: 'NY',
+                    postalCode: '10001',
+                    country: 'US',
+                    email: 'john@quadpay.com',
+                    firstName: 'John',
+                    lastName: 'Does',
+                    phoneNumber: '+15555555555'
+                },
+                lineItems: [
+                    {
+                        name: 'Item Name',
+                        description: 'Item description',
+                        quantity: 1,
+                        price: 123.45,
+                        sku: '8000148',
+                        isPreOrder: false,
+                        releaseDate: new Date(),
+                    },
+                ]
+            };
+
+            checkoutFlow = 'standard';
+            forceIframe = 'false';
+
+            // This will launch the checkout in the new window.  When the checkout session is  successful, your previous onSucess callback handler will be invoked.
+            // The force iframe parameter being set to 'true' will force an iframe checkout.
+            await window.quadpay.virtualCheckout.openCheckout(merchantId, order, checkoutFlow, forceIframe);
+        }
+    </script>
+</head>
+
+<body>
+    <h1>My Merchant Page</h1>
+    <form id="creditCardForm" action="" method="post">
+        <label for="creditCardNumber">creditCardNumber</label>
+        <input type="text" id="creditCardNumber"></input>
+
+        <label for="creditCardCvc">creditCardCvc</label>
+        <input type="text" id="creditCardCvc"></input>
+
+        <label for="creditCardExpiryMm">creditCardExpiryMm</label>
+        <input type="text" id="creditCardExpiryMm"></input>
+
+        <label for="creditCardExpiryYy">creditCardExpiryYy</label>
+        <input type="text" id="creditCardExpiryYy"></input>
+
+        <label for="cardholderName">cardholderName</label>
+        <input type="text" id="cardholderName"></input>
+
+        <label for="name">name</label>
+        <input type="text" id="name" />
+
+        <label for="addressLine1">addressLine1</label>
+        <input type="text" id="addressLine1" />
+
+        <label for="addressLine2">addressLine2</label>
+        <input type="text" id="addressLine2" />
+
+        <label for="city">city</label>
+        <input type="text" id="city" />
+
+        <label for="state">state</label>
+        <input type="text" id="state" />
+
+        <label for="zipCode">zipCode</label>
+        <input type="text" id="zipCode" />
+
+        <label for="country">country</label>
+        <input type="text" id="country" />
+
+        <label for="merchant_fee">merchant_fee</label>
+        <input id="merchant_fee" />
+    </form>
+
+    <button onclick="openCheckout()">QuadPay Checkout</button>
+</body>
+
+</html>
