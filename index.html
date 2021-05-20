@@ -47,7 +47,7 @@
             // information records for the customer in your system.
 
             // Auto-submit the form for the customer
-            document.getElementById('creditCardForm').submit();
+            // document.getElementById('creditCardForm').submit();
         };
 
         window.quadpay.virtualCheckout.onComplete(onCompleteCallback);
@@ -106,6 +106,10 @@
 
 <body>
     <h1>My Merchant Page</h1>
+
+    <quadpay-button merchantId="3d7fe082-c58b-4e98-9ad9-b69d12ebe595" amount="135.00" currency="USD"
+        merchantReference="123123487328754651328736541287634"></quadpay-button>
+
     <form id="creditCardForm" action="" method="post">
         <label for="creditCardNumber">creditCardNumber</label>
         <input type="text" id="creditCardNumber"></input>
@@ -142,12 +146,47 @@
 
         <label for="country">country</label>
         <input type="text" id="country" />
-
-        <label for="merchant_fee">merchant_fee</label>
-        <input id="merchant_fee" />
     </form>
 
     <button onclick="openCheckout()">QuadPay Checkout</button>
 </body>
+
+<script>
+    const quadpayButton = document.getElementsByTagName('quadpay-button')[0];
+    
+    // Triggered when the customer completes the QuadPay checkout
+    quadpayButton.onSuccess(function (card, cardholder, customer) {
+
+        // Fill in your existing credit card form with the details from
+        // the dynamically generated QuadPay single-use card
+        document.getElementById('creditCardNumber').value = card.number;
+        document.getElementById('creditCardCvc').value = card.cvc;
+        document.getElementById('creditCardExpiryMm').value = card.expirationMonth;
+        document.getElementById('creditCardExpiryYy').value = card.expirationYear;
+        document.getElementById('cardholderName').value = cardholder.name;
+
+        // Fill in your existing billing address form with details from
+        // the card holder.  If your billing address contains first/last name
+        // fields, you can leave those as the actual customer values.
+        document.getElementById('name').value = cardholder.name;
+        document.getElementById('addressLine1').value = cardholder.address1;
+        document.getElementById('addressLine2').value = cardholder.address2;
+        document.getElementById('city').value = cardholder.city;
+        document.getElementById('state').value = cardholder.state;
+        document.getElementById('zipCode').value = cardholder.postalCode;
+        document.getElementById('country').value = cardholder.country;
+
+        // The customer object contains the name and address of the customer
+        // that completed the checkout in case you need to update your billing
+        // information records for the customer in your system.
+
+        // Auto-submit the form for the customer
+        // document.getElementById('creditCardForm').submit();
+    });
+
+    quadpayButton.onClose(function() {
+        console.log('QuadPay checkout canceled by customer');
+    });
+</script>
 
 </html>
