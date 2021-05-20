@@ -15,32 +15,32 @@
         }
     </style>
     <script>
-        const callback = function (result) {
+        const onCompleteCallback = function (virtualCardResult) {
             // Fill in your existing credit card form with the details from
             // the dynamically generated QuadPay single-use card
-            document.getElementById('creditCardNumber').value = result.card.number;
-            document.getElementById('creditCardCvc').value = result.card.cvc;
+            document.getElementById('creditCardNumber').value = virtualCardResult.card.number;
+            document.getElementById('creditCardCvc').value = virtualCardResult.card.cvc;
             document.getElementById('creditCardExpiryMm').value
-                = result.card.expirationMonth;
+                = virtualCardResult.card.expirationMonth;
 
             document.getElementById('creditCardExpiryYy').value
-                = result.card.expirationYear;
+                = virtualCardResult.card.expirationYear;
 
-            document.getElementById('cardholderName').value = result.cardholder.name;
+            document.getElementById('cardholderName').value = virtualCardResult.cardholder.name;
 
             // Fill in your existing billing address form with details from
             // the card holder.  If your billing address contains first/last name
             // fields, you can leave those as the actual customer values.
-            document.getElementById('name').value = result.cardholder.name;
-            document.getElementById('addressLine1').value = result.cardholder.address1;
-            document.getElementById('addressLine2').value = result.cardholder.address2;
-            document.getElementById('city').value = result.cardholder.city;
-            document.getElementById('state').value = result.cardholder.state;
-            document.getElementById('zipCode').value = result.cardholder.postalCode;
-            document.getElementById('country').value = result.cardholder.country;
+            document.getElementById('name').value = virtualCardResult.cardholder.name;
+            document.getElementById('addressLine1').value = virtualCardResult.cardholder.address1;
+            document.getElementById('addressLine2').value = virtualCardResult.cardholder.address2;
+            document.getElementById('city').value = virtualCardResult.cardholder.city;
+            document.getElementById('state').value = virtualCardResult.cardholder.state;
+            document.getElementById('zipCode').value = virtualCardResult.cardholder.postalCode;
+            document.getElementById('country').value = virtualCardResult.cardholder.country;
 
             document.getElementById('merchant_fee').value =
-                result.merchantFeeForPaymentPlan;
+                virtualCardResult.merchantFeeForPaymentPlan;
 
             // The customer object contains the name and address of the customer
             // that completed the checkout in case you need to update your billing
@@ -50,7 +50,14 @@
             document.getElementById('creditCardForm').submit();
         };
 
-        window.quadpay.virtualCheckout.onComplete(callback);
+        window.quadpay.virtualCheckout.onComplete(onCompleteCallback);
+    </script>
+
+    <script>
+        const onCloseCallback = function (closeReasonMessage) {
+            console.log(`Virtual checkout was closed: ${closeReasonMessage}`);
+        }
+        window.quadpay.virtualCheckout.onClose(onCloseCallback);
     </script>
 
     <script>
