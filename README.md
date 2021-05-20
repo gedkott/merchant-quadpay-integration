@@ -1,5 +1,7 @@
 # merchant-quadpay-integration
 
+Based on the docs here: https://docs.quadpay.com/docs/virtual-checkout
+
 Use `python -m http.server 8080` to serve this index.html through a HTTP server
 
 access each example individually:
